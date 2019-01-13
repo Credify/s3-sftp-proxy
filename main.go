@@ -6,7 +6,9 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"time"
@@ -17,15 +19,17 @@ import (
 )
 
 var (
-	configFile string
-	bind       string
-	debug      bool
+	configFile       string
+	bind             string
+	debug            bool
+	healthListenAddr string
 )
 
 func init() {
 	flag.StringVar(&configFile, "config", "s3-sftp-proxy.toml", "configuration file")
 	flag.StringVar(&bind, "bind", "", "listen on addr:port")
 	flag.BoolVar(&debug, "debug", false, "turn on debugging output")
+	flag.StringVar(&healthListenAddr, "health-listen-addr", ":8080", "server listen address")
 }
 
 func buildSSHServerConfig(buckets *S3Buckets, cfg *S3SFTPProxyConfig) (*ssh.ServerConfig, error) {
@@ -163,6 +167,28 @@ func main() {
 	sigChan := make(chan os.Signal)
 	signal.Notify(sigChan, os.Interrupt)
 
+	router := http.NewServeMux()
+	router.Handle("/health", health())
+
+	logWriter := logger.Writer()
+	defer logWriter.Close()
+
+	server := &http.Server{
+		Addr:         healthListenAddr,
+		Handler:      router,
+		ErrorLog:     log.New(logWriter, "", 0),
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  15 * time.Second,
+	}
+
+	go func() {
+		logger.Println("HTTP Server listening on ", healthListenAddr)
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			logger.Fatalf("Could not listen on %s: %v\n", healthListenAddr, err)
+		}
+	}()
+
 	errChan := make(chan error)
 	go func() {
 		errChan <- (&Server{
@@ -186,6 +212,11 @@ outer:
 			}
 			break outer
 		case <-sigChan:
+			logger.Info("Shutdown signal received")
+			if err := server.Shutdown(ctx); err != nil {
+				logger.Fatalf("Could not gracefully shutdown the server: %v\n", err)
+			}
+			logger.Info("HTTP Server shutdown")
 			cancel()
 		}
 	}
