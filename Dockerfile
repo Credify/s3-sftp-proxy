@@ -31,10 +31,6 @@ RUN echo "Building" \
 # Definitive image
 FROM docker-upgrade.artifactory.build.upgrade.com/container-base:2.0.20200406.0-205
 
-# We know it's bad but this is for docker socket to be accessible when mounted used with twistcli actually
-# ticket open for that issue: https://credify.atlassian.net/browse/TOP-9238
-USER root
-
 WORKDIR /
 
 COPY --from=tool_builder /go/bin/s3-sftp-proxy  /usr/bin/s3-sftp-proxy
