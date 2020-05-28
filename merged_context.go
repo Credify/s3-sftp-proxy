@@ -51,7 +51,7 @@ func (ctxs *mergedContext) watcher() {
 			case <-ctxs.ctxs[0].Done():
 				ctxs.err = ctxs.ctxs[0].Err()
 			case <-ctxs.ctxs[1].Done():
-				ctxs.err = ctxs.ctxs[0].Err()
+				ctxs.err = ctxs.ctxs[1].Err()
 			}
 			close(ctxs.doneChan)
 		}()
