@@ -42,16 +42,16 @@ func (s *Server) HandleChannel(ctx context.Context, bucket *S3Bucket, sshCh ssh.
 		sshCh,
 		asHandlers(
 			&S3BucketIO{
-				Ctx:    ctx,
-				Bucket: bucket,
+				Ctx:                      ctx,
+				Bucket:                   bucket,
 				ReaderLookbackBufferSize: s.ReaderLookbackBufferSize,
 				ReaderMinChunkSize:       s.ReaderMinChunkSize,
 				ListerLookbackBufferSize: s.ListerLookbackBufferSize,
-				Log:                  s.Log,
-				PhantomObjectMap:     s.PhantomObjectMap,
-				Perms:                bucket.Perms,
-				ServerSideEncryption: &bucket.ServerSideEncryption,
-				Now:                  s.Now,
+				Log:                      s.Log,
+				PhantomObjectMap:         s.PhantomObjectMap,
+				Perms:                    bucket.Perms,
+				ServerSideEncryption:     &bucket.ServerSideEncryption,
+				Now:                      s.Now,
 			},
 		),
 	)
@@ -153,7 +153,7 @@ func (s *Server) HandleClient(ctx context.Context, conn *net.TCPConn) error {
 
 			sshCh, reqs, err := newSSHCh.Accept()
 			if err != nil {
-				F(s.Log.Error, "could not accept channel", err.Error())
+				F(s.Log.Error, "could not accept channel, %v", err.Error())
 				break
 			}
 
