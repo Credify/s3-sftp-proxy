@@ -106,6 +106,11 @@ func (s *Server) HandleClient(ctx context.Context, conn *net.TCPConn) error {
 		F(s.Log.Info, "connection from client %s closed", conn.RemoteAddr().String())
 		conn.Close()
 	}()
+	defer func() {
+		if r := recover(); r != nil {
+			F(s.Log.Error, "unrecoverable error: %v", r)
+		}
+	}()
 	F(s.Log.Info, "connected from client %s", conn.RemoteAddr().String())
 
 	innerCtx, cancel := context.WithCancel(ctx)
