@@ -1,0 +1,6 @@
+primaryOwners:
+  - leanidmokin
+deploymentNames:
+  - s3-sftp-proxy
+deploymentOwners:
+  - team:review-devops
