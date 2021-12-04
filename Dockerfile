@@ -1,5 +1,5 @@
 # Module Cached image
-FROM docker-upgrade.artifactory.build.upgrade.com/go-builder:2.0.20211005.0-1.1.17.3-2 AS build_base
+FROM docker-upgrade.artifactory.build.upgrade.com/go-builder:2.0.20211005.0-2.1.17.4-4 AS build_base
 
 WORKDIR /go/src/github.com/moriyoshi/s3-sftp-proxy
 
@@ -29,7 +29,7 @@ RUN echo "Building" \
     && echo
 
 # Definitive image
-FROM docker-upgrade.artifactory.build.upgrade.com/container-base:2.0.20211005.0-2
+FROM docker-upgrade.artifactory.build.upgrade.com/container-base:2.0.20211201.0-3
 
 WORKDIR /
 
