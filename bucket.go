@@ -4,12 +4,10 @@ import (
 	"crypto"
 	"encoding/base64"
 	"fmt"
+	aws_creds "github.com/aws/aws-sdk-go/aws/credentials"
 	"strings"
 
 	aws "github.com/aws/aws-sdk-go/aws"
-	aws_creds "github.com/aws/aws-sdk-go/aws/credentials"
-	aws_ec2_role_creds "github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
-	aws_ec2_meta "github.com/aws/aws-sdk-go/aws/ec2metadata"
 	aws_session "github.com/aws/aws-sdk-go/aws/session"
 	s3 "github.com/aws/aws-sdk-go/service/s3"
 	"github.com/pkg/errors"
@@ -84,17 +82,6 @@ func (s3bs *S3Buckets) Get(name string) *S3Bucket {
 
 func (s3b *S3Bucket) S3(sess *aws_session.Session) *s3.S3 {
 	awsCfg := s3b.AWSConfig
-	if awsCfg.Credentials == nil {
-		awsCfg = s3b.AWSConfig.WithCredentials(aws_creds.NewChainCredentials(
-			[]aws_creds.Provider{
-				&aws_ec2_role_creds.EC2RoleProvider{
-					Client:       aws_ec2_meta.New(sess),
-					ExpiryWindow: 0,
-				},
-				&aws_creds.EnvProvider{},
-			},
-		))
-	}
 	return s3.New(sess, awsCfg)
 }
 
