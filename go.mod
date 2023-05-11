@@ -10,6 +10,5 @@ require (
 	github.com/pkg/sftp v1.8.3
 	github.com/sirupsen/logrus v1.2.0
 	github.com/stretchr/testify v1.2.2
-	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
-	golang.org/x/net v0.0.0-20200520182314-0ba52f642ac2 // indirect
+	golang.org/x/crypto v0.9.0
 )
