@@ -1,5 +1,5 @@
 # Module Cached image
-FROM --platform=$BUILDPLATFORM docker-upgrade.artifactory.build.upgrade.com/go-builder:2.0.20230628.0-50.1.20.5-62 AS build_base
+FROM --platform=$BUILDPLATFORM docker-upgrade.artifactory.build.upgrade.com/go-builder:2.0.20230719.0-51.1.20.5-63 AS build_base
 
 WORKDIR /go/src/github.com/moriyoshi/s3-sftp-proxy
 
@@ -18,7 +18,7 @@ RUN echo "Testing" \
 #         --timeout 5m \
 #    && echo
 
-FROM docker-upgrade.artifactory.build.upgrade.com/go-builder:2.0.20230628.0-50.1.20.5-62 AS build
+FROM docker-upgrade.artifactory.build.upgrade.com/go-builder:2.0.20230719.0-51.1.20.5-63 AS build
 
 WORKDIR /go/src/github.com/moriyoshi/s3-sftp-proxy
 
