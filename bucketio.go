@@ -17,8 +17,6 @@ import (
 	// s3crypto "github.com/aws/aws-sdk-go/service/s3/s3crypto"
 )
 
-var aclPrivate = "private"
-
 type ReadDeadlineSettable interface {
 	SetReadDeadline(t time.Time) error
 }
@@ -156,6 +154,7 @@ type S3PutObjectWriter struct {
 	Ctx                  context.Context
 	Bucket               string
 	Key                  Path
+	Acl                  string
 	S3                   *aws_s3.S3
 	ServerSideEncryption *ServerSideEncryptionConfig
 	Log                  interface {
@@ -180,7 +179,7 @@ func (oow *S3PutObjectWriter) Close() error {
 	F(oow.Log.Debug, "PutObject(Bucket=%s, Key=%s, Sse=%v)", oow.Bucket, key, sse)
 	_, err := oow.S3.PutObject(
 		&aws_s3.PutObjectInput{
-			ACL:                  &aclPrivate,
+			ACL:                  &oow.Acl,
 			Body:                 bytes.NewReader(oow.writer.Bytes()),
 			Bucket:               &oow.Bucket,
 			Key:                  &key,
@@ -622,6 +621,7 @@ func (s3io *S3BucketIO) Filewrite(req *sftp.Request) (io.WriterAt, error) {
 		Ctx:                  combineContext(s3io.Ctx, req.Context()),
 		Bucket:               s3io.Bucket.Bucket,
 		Key:                  key,
+		Acl:                  s3io.Bucket.Acl,
 		S3:                   s3io.Bucket.S3(sess),
 		ServerSideEncryption: s3io.ServerSideEncryption,
 		Log:                  s3io.Log,
@@ -658,7 +658,7 @@ func (s3io *S3BucketIO) Filecmd(req *sftp.Request) error {
 		_, err = s3io.Bucket.S3(sess).CopyObjectWithContext(
 			combineContext(s3io.Ctx, req.Context()),
 			&aws_s3.CopyObjectInput{
-				ACL:                  &aclPrivate,
+				ACL:                  &s3io.Bucket.Acl,
 				Bucket:               &s3io.Bucket.Bucket,
 				CopySource:           &copySource,
 				Key:                  &destStr,

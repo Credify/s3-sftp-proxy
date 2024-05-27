@@ -31,6 +31,7 @@ type AWSCredentialsConfig struct {
 
 type S3BucketConfig struct {
 	Profile                        string                   `toml:"profile"`
+	Acl                            string                   `toml:"acl"`
 	Credentials                    *AWSCredentialsConfig    `toml:"credentials"`
 	Region                         string                   `toml:"region"`
 	Bucket                         string                   `toml:"bucket"`
@@ -107,6 +108,9 @@ func validateAndFixupBucketConfig(bCfg *S3BucketConfig) error {
 	}
 	if bCfg.Listable == nil {
 		bCfg.Listable = &vTrue
+	}
+	if bCfg.Acl == "" {
+		bCfg.Acl = "private"
 	}
 	return nil
 }

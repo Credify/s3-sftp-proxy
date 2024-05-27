@@ -62,6 +62,7 @@ type S3Bucket struct {
 	Name                           string
 	AWSConfig                      *aws.Config
 	Bucket                         string
+	Acl                            string
 	KeyPrefix                      Path
 	MaxObjectSize                  int64
 	Users                          UserStore
@@ -142,6 +143,7 @@ func buildS3Bucket(uStores UserStores, name string, bCfg *S3BucketConfig) (*S3Bu
 		KeyPrefix:     keyPrefix,
 		MaxObjectSize: maxObjectSize,
 		Users:         users,
+		Acl:           bCfg.Acl,
 		Perms: Perms{
 			Readable: *bCfg.Readable,
 			Writable: *bCfg.Writable,
