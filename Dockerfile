@@ -34,7 +34,7 @@ RUN echo "Building" \
     && echo
 
 # Definitive image
-FROM docker-upgrade.artifactory.build.upgrade.com/container-base-2023:2.0.20241217.0-8
+FROM docker-upgrade.artifactory.build.upgrade.com/container-base-2023:2.0.20241217.0-9
 
 WORKDIR /
 
