@@ -34,7 +34,7 @@ RUN echo "Building" \
     && echo
 
 # Definitive image
-FROM 118455887602.dkr.ecr.us-west-2.amazonaws.com/releases/images/container-base-2023:20251106100700-c71893fb
+FROM 118455887602.dkr.ecr.us-west-2.amazonaws.com/releases/images/container-base-2023:20251111100630-5f3bb78f
 
 WORKDIR /
 
