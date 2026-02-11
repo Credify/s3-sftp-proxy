@@ -1,5 +1,5 @@
 # Module Cached image
-FROM --platform=$BUILDPLATFORM 118455887602.dkr.ecr.us-west-2.amazonaws.com/releases/images/go-builder-2023:20260206160855-98230af9 AS build_base
+FROM --platform=$BUILDPLATFORM 118455887602.dkr.ecr.us-west-2.amazonaws.com/releases/images/go-builder-2023:20260210210507-c71a523b AS build_base
 
 WORKDIR /go/src/github.com/moriyoshi/s3-sftp-proxy
 
@@ -18,7 +18,7 @@ RUN echo "Testing" \
 #         --timeout 5m \
 #    && echo
 
-FROM 118455887602.dkr.ecr.us-west-2.amazonaws.com/releases/images/go-builder-2023:20260206160855-98230af9 AS build
+FROM 118455887602.dkr.ecr.us-west-2.amazonaws.com/releases/images/go-builder-2023:20260210210507-c71a523b AS build
 
 WORKDIR /go/src/github.com/moriyoshi/s3-sftp-proxy
 
@@ -34,7 +34,7 @@ RUN echo "Building" \
     && echo
 
 # Definitive image
-FROM 118455887602.dkr.ecr.us-west-2.amazonaws.com/releases/images/container-base-2023:20260127201708-9d58a6c1
+FROM 118455887602.dkr.ecr.us-west-2.amazonaws.com/releases/images/container-base-2023:20260210100722-47fe3bb5
 
 WORKDIR /
 
